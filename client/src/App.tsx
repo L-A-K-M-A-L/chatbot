@@ -1,5 +1,6 @@
 import './App.css';
-import ChatBot from './components/Chatbot';
+import ChatBot from './components/ChatBot/ChatBot';
+
 
 function App() {
   return (

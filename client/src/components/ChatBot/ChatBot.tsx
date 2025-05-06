@@ -53,7 +53,7 @@ const ChatBot: React.FC = () => {
         for (const line of lines) {
           if (!line.startsWith('data:')) continue;
 
-          const chunk = line.replace('data:', '').trim();
+          const chunk = line.replace('data:', ' ').trim();
           fullReply += chunk;
 
           setMessages(prev => {

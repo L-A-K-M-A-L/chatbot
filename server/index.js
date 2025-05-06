@@ -21,7 +21,10 @@ let conversationHistory = [];
 
 app.post('/chat', async (req, res) => {
   const userMessage = req.body.message;
-  conversationHistory.push({ role: 'user', content: userMessage });
+  conversationHistory.push({
+    role: 'user',
+    content: userMessage
+  });
 
   try {
     const response = await axios.post('http://localhost:11434/api/generate', {
