@@ -1,3 +1,51 @@
-.ChatBot {
-  
+.chatbotContainer {
+  width: 350px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  overflow: hidden;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f2f2f2;
+  padding: 12px 16px;
+  font-weight: bold;
+}
+
+.chatBody {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px;
+  background: #fafbfc;
+  display: flex;
+  flex-direction: column;
+}
+
+.footer {
+  padding: 10px 16px;
+  background: #f2f2f2;
+}
+
+.launchBtn {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  background: #1890ff;
+  color: #fff;
+  border: none;
+  font-size: 28px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.20);
 }

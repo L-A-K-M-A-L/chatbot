@@ -1,0 +1,30 @@
+.sendMessageWrapper {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  
+  .input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 10px 14px;
+    font-size: 16px;
+    background: transparent;
+  }
+  
+  .sendBtn {
+    background: #1890ff;
+    color: #fff;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    width: 48px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  

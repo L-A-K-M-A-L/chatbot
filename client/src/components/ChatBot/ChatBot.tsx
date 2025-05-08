@@ -1,5 +1,9 @@
-import React, { useState, useRef } from 'react';
-import 'react-app-polyfill/stable';
+import React, { useState, useRef, useEffect } from 'react';
+import styles from './ChatBot.module.scss';
+import { CloseOutlined, CustomerServiceOutlined, UserOutlined, RobotOutlined } from '@ant-design/icons';
+import SendMessage from '../SendMessage/SendMessage';
+import ChatMessage from '../ChatMessage/ChatMessage';
+import TypingIndicator from '../TypingIndicator/TypingIndicator';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -9,53 +13,44 @@ interface Message {
 const ChatBot: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [isBotTyping, setIsBotTyping] = useState(false);
+  const [isUserTyping, setIsUserTyping] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
+  useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  }, [messages, isBotTyping, isUserTyping]);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
-
-    setMessages(prev => [...prev, { role: 'user', content: input }]);
+    const userMsg = { role: 'user', content: input };
+    setMessages(prev => [...prev, userMsg]);
     setInput('');
+    setIsBotTyping(true);
 
     try {
       const response = await fetch('http://localhost:5001/chat', {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ message: input }),
-        credentials: 'include'
       });
-
-      if (!response.ok || !response.body) {
-        throw new Error('Network response was not ok');
-      }
-
+      if (!response.ok || !response.body) throw new Error('Network response failed');
       const reader = response.body.getReader();
       const decoder = new TextDecoder('utf-8');
       let buffer = '';
       let fullReply = '';
-
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split('\n');
-
-        // Keep incomplete line in buffer
         buffer = lines.pop() || '';
-
         for (const line of lines) {
           if (!line.startsWith('data:')) continue;
-
-          const chunk = line.replace('data:', ' ').trim();
-          fullReply += chunk;
-
+          const chunk = line.replace('data:', '').trim();
+          fullReply += chunk + ' ';
           setMessages(prev => {
             const last = prev[prev.length - 1];
             if (last?.role === 'assistant') {
@@ -64,35 +59,44 @@ const ChatBot: React.FC = () => {
               return [...prev, { role: 'assistant', content: fullReply }];
             }
           });
-          scrollToBottom();
         }
       }
-    } catch (error) {
-      setMessages(prev => [...prev, { role: 'assistant', content: 'Error: Failed to load response.' }]);
+    } catch (err) {
+      setMessages(prev => [...prev, { role: 'assistant', content: 'Error: Failed to get response.' }]);
+    } finally {
+      setIsBotTyping(false);
     }
   };
 
-  return (
-    <div style={{ padding: 20 }}>
-      <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
-        {messages.map((msg, i) => (
-          <div key={i} style={{ color: msg.role === 'user' ? 'blue' : 'green' }}>
-            <strong>{msg.role === 'user' ? 'You' : 'Bot'}:</strong> {msg.content}
-          </div>
+  return isOpen ? (
+    <div className={styles.chatbotContainer}>
+      <div className={styles.header}>
+        <CustomerServiceOutlined />
+        <span>ChatBot</span>
+        <CloseOutlined onClick={() => setIsOpen(false)} />
+      </div>
+      <div className={styles.chatBody}>
+        {messages.map((msg, idx) => (
+          <ChatMessage key={idx} role={msg.role} content={msg.content} />
         ))}
+        {(isBotTyping || isUserTyping) && (
+          <TypingIndicator side={isBotTyping ? 'left' : 'right'} />
+        )}
         <div ref={chatEndRef} />
       </div>
-      <div style={{ marginTop: 10 }}>
-        <input
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && sendMessage()}
-          style={{ width: '80%', padding: 10 }}
-          placeholder="Type your message..."
+      <div className={styles.footer}>
+        <SendMessage
+          input={input}
+          setInput={setInput}
+          sendMessage={sendMessage}
+          setIsUserTyping={setIsUserTyping}
         />
-        <button onClick={sendMessage} style={{ padding: 10 }}>Send</button>
       </div>
     </div>
+  ) : (
+    <button className={styles.launchBtn} onClick={() => setIsOpen(true)}>
+      <CustomerServiceOutlined />
+    </button>
   );
 };
 

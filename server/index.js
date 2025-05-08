@@ -14,7 +14,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
-app.options(/^.*$/, cors(corsOptions)); // ✅ Safe for Express 5
+app.options(/^.*$/, cors(corsOptions)); 
 
 
 let conversationHistory = [];
@@ -55,7 +55,7 @@ app.post('/chat', async (req, res) => {
           const parsed = JSON.parse(line);
           if (parsed.response) {
             res.write(`data: ${parsed.response}\n\n`);
-            fullReply += parsed.response;
+            fullReply += parsed.response + ' ';
           }
         } catch (err) {
           console.error('Error parsing stream:', err.message);
@@ -64,6 +64,7 @@ app.post('/chat', async (req, res) => {
     });
 
     response.data.on('end', () => {
+      fullReply = fullReply.trim();
       conversationHistory.push({ role: 'assistant', content: fullReply });
       res.end();
     });
