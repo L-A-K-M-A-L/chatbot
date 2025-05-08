@@ -22,9 +22,24 @@ const ChatBot: React.FC = () => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isBotTyping, isUserTyping]);
 
+  // Show initial welcome message when chat opens
+  useEffect(() => {
+    if (isOpen && messages.length === 0) {
+      setTimeout(() => {
+        setMessages([
+          { 
+            role: 'assistant', 
+            content: 'Welcome to our IT Partnership Wizard! I can help you explore our services in Development, UI/UX Design, or Quality Assurance. Which area are you interested in?' 
+          }
+        ]);
+      }, 500);
+    }
+  }, [isOpen, messages.length]);
+  
+
   const sendMessage = async () => {
     if (!input.trim()) return;
-    const userMsg = { role: 'user', content: input };
+    const userMsg : Message = { role: 'user', content: input };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setIsBotTyping(true);
