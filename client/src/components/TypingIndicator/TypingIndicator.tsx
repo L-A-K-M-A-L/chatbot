@@ -3,7 +3,9 @@ import styles from './TypingIndicator.module.scss';
 
 interface TypingIndicatorProps {
   side: 'left' | 'right';
+  isActive: boolean; // Add this line
 }
+
 
 const TypingIndicator: React.FC<TypingIndicatorProps> = ({ side }) => (
   <div className={`${styles.typingRow} ${side === 'right' ? styles.right : styles.left}`}>

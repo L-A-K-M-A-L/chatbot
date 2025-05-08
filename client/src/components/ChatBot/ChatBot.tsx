@@ -88,8 +88,8 @@ const ChatBot: React.FC = () => {
   return isOpen ? (
     <div className={styles.chatbotContainer}>
       <div className={styles.header}>
-        <CustomerServiceOutlined />
-        <span>ChatBot</span>
+        {/* <CustomerServiceOutlined /> */}
+        <img src='/images/logo.svg'  alt='logo' style={{ width : 90, height : 50 }}/>
         <CloseOutlined onClick={() => setIsOpen(false)} />
       </div>
       <div className={styles.chatBody}>
@@ -97,7 +97,9 @@ const ChatBot: React.FC = () => {
           <ChatMessage key={idx} role={msg.role} content={msg.content} />
         ))}
         {(isBotTyping || isUserTyping) && (
-          <TypingIndicator side={isBotTyping ? 'left' : 'right'} />
+          <TypingIndicator side={isBotTyping ? 'left' : 'right'}
+            isActive={isBotTyping || isUserTyping}
+          />
         )}
         <div ref={chatEndRef} />
       </div>
