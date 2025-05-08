@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './ChatBot.module.scss';
-import { CloseOutlined, CustomerServiceOutlined, UserOutlined, RobotOutlined } from '@ant-design/icons';
+import { CloseOutlined, CustomerServiceOutlined } from '@ant-design/icons';
 import SendMessage from '../SendMessage/SendMessage';
 import ChatMessage from '../ChatMessage/ChatMessage';
 import TypingIndicator from '../TypingIndicator/TypingIndicator';
@@ -45,9 +45,11 @@ const ChatBot: React.FC = () => {
     setIsBotTyping(true);
 
     try {
-      const response = await fetch('http://localhost:5001/chat', {
+      const response = await fetch('http://localhost:5001/api/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type'  : 'application/json' 
+        },
         credentials: 'include',
         body: JSON.stringify({ message: input }),
       });
