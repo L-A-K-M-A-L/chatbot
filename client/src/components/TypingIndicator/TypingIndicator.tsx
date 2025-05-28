@@ -3,7 +3,7 @@ import styles from './TypingIndicator.module.scss';
 
 interface TypingIndicatorProps {
   side: 'left' | 'right';
-  isActive: boolean; // Add this line
+  isActive: boolean;
 }
 
 
