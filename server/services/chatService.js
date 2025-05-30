@@ -49,6 +49,8 @@ function processWizardFlow(message) {
       selectedStream = 'Quality Assurance';
       currentStage = 'qaType';
       return wizardFlows.streamSelection['Quality Assurance'].message;
+    }else{
+      return "Please select a stream of interest: Development, UI/UX Design, or Quality Assurance.";
     }
   }
   
