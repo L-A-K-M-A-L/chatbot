@@ -1,5 +1,5 @@
 module.exports = {
-    origin: 'http://localhost:3000', // Explicit origin
+    origin: 'http://localhost:3000',
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: [
       'Content-Type', 
