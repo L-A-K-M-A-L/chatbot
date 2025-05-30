@@ -53,11 +53,14 @@ const ChatBot: React.FC = () => {
         credentials: 'include',
         body: JSON.stringify({ message: input }),
       });
+      
       if (!response.ok || !response.body) throw new Error('Network response failed');
+     
       const reader = response.body.getReader();
       const decoder = new TextDecoder('utf-8');
       let buffer = '';
       let fullReply = '';
+     
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
