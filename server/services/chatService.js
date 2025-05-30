@@ -6,21 +6,6 @@ let conversationHistory = [];
 let currentStage = 'welcome';
 let selectedStream = null;
 
-function isAskingForHumanAgent(message) {
-  const humanAgentKeywords = [
-    "human agent",
-    "human",
-    "specialist",
-    "contact",
-    "representative",
-    "speak to someone",
-    "connect me",
-    "help me with a person",
-  ];
-  
-  return humanAgentKeywords.some(phrase => message.toLowerCase().includes(phrase));
-}
-
 function processWizardFlow(message) {
   if (isAskingForHumanAgent(message)) {
     currentStage = 'needHumanAgent';
@@ -66,6 +51,21 @@ function processWizardFlow(message) {
   }
   
   return null;
+}
+
+function isAskingForHumanAgent(message) {
+  const humanAgentKeywords = [
+    "human agent",
+    "human",
+    "specialist",
+    "contact",
+    "representative",
+    "speak to someone",
+    "connect me",
+    "help me with a person",
+  ];
+  
+  return humanAgentKeywords.some(phrase => message.toLowerCase().includes(phrase));
 }
 
 async function processWithLLM(userMessage) {
