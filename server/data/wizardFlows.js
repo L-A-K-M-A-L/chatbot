@@ -4,7 +4,7 @@ module.exports = {
       nextStage: "streamSelection",
     },
     streamSelection: {
-      Development: {
+      "Development": {
         message: "Great choice! What type of development services do you need? (Web, Mobile, Backend, Full-Stack, etc.)",
         nextStage: "developmentType"
       },

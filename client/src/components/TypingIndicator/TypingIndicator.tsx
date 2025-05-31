@@ -6,14 +6,15 @@ interface TypingIndicatorProps {
   isActive: boolean;
 }
 
-
-const TypingIndicator: React.FC<TypingIndicatorProps> = ({ side }) => (
+const TypingIndicator: React.FC<TypingIndicatorProps> = ({ side, isActive }) => (
   <div className={`${styles.typingRow} ${side === 'right' ? styles.right : styles.left}`}>
-    <div className={styles.typingIndicator}>
-      <div className={styles.dot}></div>
-      <div className={styles.dot}></div>
-      <div className={styles.dot}></div>
-    </div>
+    {isActive && (
+      <div className={styles.typingIndicator}>
+        <div className={styles.dot}></div>
+        <div className={styles.dot}></div>
+        <div className={styles.dot}></div>
+      </div>
+    )}
   </div>
 );
 

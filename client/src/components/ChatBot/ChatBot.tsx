@@ -27,19 +27,38 @@ const ChatBot: React.FC = () => {
     if (isOpen && messages.length === 0) {
       setTimeout(() => {
         setMessages([
-          { 
-            role: 'assistant', 
-            content: 'Welcome to our IT Partnership Wizard! I can help you explore our services in Development, UI/UX Design, or Quality Assurance. Which area are you interested in?' 
+          {
+            role: 'assistant',
+            content: 'Welcome to our IT Partnership Wizard! I can help you explore our services in Development, UI/UX Design, or Quality Assurance. Which area are you interested in?'
           }
         ]);
       }, 500);
     }
   }, [isOpen, messages.length]);
-  
+
 
   const sendMessage = async () => {
     if (!input.trim()) return;
-    const userMsg : Message = { role: 'user', content: input };
+
+    if (input.includes('thank') || input.includes('thanks') || input.includes('thank you') || input.includes('close')) {
+
+      setMessages(prev => [...prev, { role: 'assistant', content: 'You are welcome! If you have any more questions, feel free to ask.' }]);
+      setInput('');
+      setTimeout(() => {
+        setIsOpen(false);
+        setMessages([]);
+        setIsBotTyping(false);
+        setIsUserTyping(false);
+      }, 700);
+
+        const resetChat = async () => {
+        await fetch('http://localhost:5001/api/chat/reset', { method: 'POST', credentials: 'include' });
+        setMessages([]);
+      };
+      return;
+    }
+
+    const userMsg: Message = { role: 'user', content: input };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setIsBotTyping(true);
@@ -47,20 +66,20 @@ const ChatBot: React.FC = () => {
     try {
       const response = await fetch('http://localhost:5001/api/chat', {
         method: 'POST',
-        headers: { 
-          'Content-Type'  : 'application/json' 
+        headers: {
+          'Content-Type': 'application/json'
         },
         credentials: 'include',
         body: JSON.stringify({ message: input }),
       });
-      
+
       if (!response.ok || !response.body) throw new Error('Network response failed');
-     
+
       const reader = response.body.getReader();
       const decoder = new TextDecoder('utf-8');
       let buffer = '';
       let fullReply = '';
-     
+
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
@@ -92,7 +111,7 @@ const ChatBot: React.FC = () => {
     <div className={styles.chatbotContainer}>
       <div className={styles.header}>
         {/* <CustomerServiceOutlined /> */}
-        <img src='/images/logo.svg'  alt='logo' style={{ width : 90, height : 50 }}/>
+        <img src='/images/logo.svg' alt='logo' style={{ width: 90, height: 50 }} />
         <CloseOutlined onClick={() => setIsOpen(false)} />
       </div>
       <div className={styles.chatBody}>
